@@ -31,22 +31,32 @@
       margin-top: 16px;
       align-items: center;
     }
-    .extra-number {
-      width: 60px;
-      height: 40px;
-      font-size: 1.2rem;
-      text-align: center;
+    .arrow-btn {
+      width: 32px;
+      height: 24px;
+      background: #e3f2fd;
+      color: #1976d2;
+      border: none;
       border-radius: 6px;
-      border: 1px solid #0078d7;
-      outline: none;
-      /* 隱藏上下箭頭（如果不想要可移除） */
-      /* -webkit-appearance: none;
-      -moz-appearance: textfield; */
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin: 2px 0;
+      transition: background 0.2s;
     }
-    /* 顯示上下箭頭（Chrome, Edge） */
-    .extra-number::-webkit-inner-spin-button,
-    .extra-number::-webkit-outer-spin-button {
-      opacity: 1;
+    .arrow-btn:active {
+      background: #bbdefb;
+    }
+    .extra-number {
+      width: 32px;
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 2px 0;
+      border: none;
+      border-radius: 6px;
+      background: #f5f5f5;
+      color: #1976d2;
+      box-shadow: 0 0 0 1px #bbdefb;
+      outline: none;
     }
     .extra-label {
       font-size: 1.5rem;
@@ -85,6 +95,21 @@
     .suggest-btn:hover {
       background-color: #218838;
     }
+    @media (max-width: 600px) {
+      .extra-number {
+        width: 48px;
+        font-size: 1rem;
+      }
+      .extra-label {
+        font-size: 1.2rem;
+        width: 24px;
+      }
+      .confirm-btn, .suggest-btn {
+        font-size: 1rem;
+        padding: 0 10px;
+        height: 36px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -95,9 +120,29 @@
     <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
   </div>
   <div class="extra-container">
-    <input type="number" class="extra-number" id="select1" min="0" max="3" value="0" />
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <button type="button" id="select1-up" class="arrow-btn">▲</button>
+      <input 
+        type="text" 
+        class="extra-number" 
+        id="select1" 
+        value="0" 
+        readonly 
+      />
+      <button type="button" id="select1-down" class="arrow-btn">▼</button>
+    </div>
     <span class="extra-label">A</span>
-    <input type="number" class="extra-number" id="select2" min="0" max="3" value="0" />
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <button type="button" id="select2-up" class="arrow-btn">▲</button>
+      <input 
+        type="text" 
+        class="extra-number" 
+        id="select2" 
+        value="0" 
+        readonly 
+      />
+      <button type="button" id="select2-down" class="arrow-btn">▼</button>
+    </div>
     <span class="extra-label">B</span>
     <button id="confirm-btn" class="confirm-btn">確定</button>
     <button id="suggest-btn" class="suggest-btn">建議猜測</button>
@@ -257,6 +302,26 @@
       } else {
         alert('無可建議的猜測');
       }
+    };
+
+    // 上下箭頭控制 select1
+    document.getElementById('select1-up').onclick = function() {
+      let val = Number(document.getElementById('select1').value);
+      if (val < 3) document.getElementById('select1').value = val + 1;
+    };
+    document.getElementById('select1-down').onclick = function() {
+      let val = Number(document.getElementById('select1').value);
+      if (val > 0) document.getElementById('select1').value = val - 1;
+    };
+
+    // 上下箭頭控制 select2
+    document.getElementById('select2-up').onclick = function() {
+      let val = Number(document.getElementById('select2').value);
+      if (val < 3) document.getElementById('select2').value = val + 1;
+    };
+    document.getElementById('select2-down').onclick = function() {
+      let val = Number(document.getElementById('select2').value);
+      if (val > 0) document.getElementById('select2').value = val - 1;
     };
   </script>
 </body>
