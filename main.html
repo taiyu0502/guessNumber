@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>PIN Code 輸入框</title>
+  <style>
+    .pin-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    .pin-input {
+      width: 50px;
+      height: 50px;
+      font-size: 2rem;
+      text-align: center;
+      border: 2px solid #0078d7;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .pin-input:focus {
+      border-color: #005fa3;
+      box-shadow: 0 0 5px #0078d7;
+    }
+    .extra-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      align-items: center;
+    }
+    .extra-number {
+      width: 60px;
+      height: 40px;
+      font-size: 1.2rem;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid #0078d7;
+      outline: none;
+      /* 隱藏上下箭頭（如果不想要可移除） */
+      /* -webkit-appearance: none;
+      -moz-appearance: textfield; */
+    }
+    /* 顯示上下箭頭（Chrome, Edge） */
+    .extra-number::-webkit-inner-spin-button,
+    .extra-number::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+    .extra-label {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0078d7;
+      width: 30px;
+      text-align: center;
+    }
+    .confirm-btn {
+      height: 40px;
+      font-size: 1.2rem;
+      padding: 0 18px;
+      margin-left: 16px;
+      background-color: #0078d7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .confirm-btn:hover {
+      background-color: #005fa3;
+    }
+    .suggest-btn {
+      height: 40px;
+      font-size: 1.2rem;
+      padding: 0 18px;
+      margin-left: 8px;
+      background-color: #28a745; /* 綠色，與藍色接近但不同 */
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .suggest-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="pin-container">
+    <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+    <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+    <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+    <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" />
+  </div>
+  <div class="extra-container">
+    <input type="number" class="extra-number" id="select1" min="0" max="3" value="0" />
+    <span class="extra-label">A</span>
+    <input type="number" class="extra-number" id="select2" min="0" max="3" value="0" />
+    <span class="extra-label">B</span>
+    <button id="confirm-btn" class="confirm-btn">確定</button>
+    <button id="suggest-btn" class="suggest-btn">建議猜測</button>
+  </div>
+  <div id="possible-container" style="margin-top:32px; text-align:center;">
+    <h3>可能的組合：</h3>
+    <div id="possible-list" style="font-size:1.3rem;"></div>
+  </div>
+  <script>
+    // 自動跳到下一個輸入框
+    const inputs = document.querySelectorAll('.pin-input');
+
+    // 檢查目前已輸入的數字是否重複
+    function isDuplicate(value, index) {
+      return [...inputs].some((input, i) => i !== index && input.value === value && value !== '');
+    }
+
+    function onPinComplete(pin) {
+         // 例如：calculate(pin);
+    }
+
+    inputs.forEach((input, i) => {
+      input.addEventListener('input', () => {
+        const value = input.value;
+        // 只允許輸入 0-9
+        if (!/^\d$/.test(value)) {
+          input.value = '';
+          return;
+        }
+        // 檢查是否重複
+        if (isDuplicate(value, i)) {
+          input.value = '';
+          input.focus();
+          return;
+        }
+        if (input.value.length === 1 && i < inputs.length - 1) {
+          inputs[i + 1].focus();
+        }
+        // 檢查是否全部輸入完畢
+        if ([...inputs].every(inp => inp.value.length === 1)) {
+          const pin = [...inputs].map(inp => inp.value).join('');
+          onPinComplete(pin);
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && i > 0) {
+          inputs[i - 1].focus();
+        }
+      });
+    });
+
+    // 新的計算 function
+    function newCalculate(pin, selectA, selectB) {
+      alert(`PIN: ${pin}\nA選單: ${selectA}\nB選單: ${selectB}`);
+      // 這裡可以放你的計算邏輯
+    }
+
+    // 產生所有不重複的 0~9 四位數組合
+    function getAllPossible() {
+      const nums = [0,1,2,3,4,5,6,7,8,9];
+      const result = [];
+      for (let a of nums) {
+        for (let b of nums) {
+          if (b === a) continue;
+          for (let c of nums) {
+            if (c === a || c === b) continue;
+            for (let d of nums) {
+              if (d === a || d === b || d === c) continue;
+              result.push([a, b, c, d].map(String));
+            }
+          }
+        }
+      }
+      return result;
+    }
+
+    // 計算A、B
+    function calcAB(pinArr, secretArr) {
+      let A = 0, B = 0;
+      for (let i = 0; i < 4; i++) {
+        if (pinArr[i] === secretArr[i]) {
+          A++;
+        } else if (secretArr.includes(pinArr[i])) {
+          B++;
+        }
+      }
+      return { A, B };
+    }
+
+    // 所有可能組合
+    let possibleList = getAllPossible();
+
+    // 顯示可能組合
+    function showPossible(list) {
+      const container = document.getElementById('possible-list');
+      if (list.length === 0) {
+        container.textContent = '無符合條件的組合';
+      } else {
+        container.textContent = list.map(arr => arr.join('')).join('、');
+      }
+    }
+    showPossible(possibleList);
+
+    // 按下確定後，過濾可能組合
+    document.getElementById('confirm-btn').addEventListener('click', () => {
+      const pin = [...inputs].map(inp => inp.value).join('');
+      if (pin.length !== 4) {
+        alert('請先輸入完整的4位數PIN');
+        return;
+      }
+      const selectA = Number(document.getElementById('select1').value);
+      const selectB = Number(document.getElementById('select2').value);
+      const pinArr = pin.split('');
+      possibleList = possibleList.filter(secretArr => {
+        const ab = calcAB(pinArr, secretArr);
+        return ab.A === selectA && ab.B === selectB;
+      });
+      showPossible(possibleList);
+
+      // 清除PIN輸入框
+      inputs.forEach(input => input.value = '');
+      // selectA、selectB 歸 0
+      document.getElementById('select1').value = 0;
+      document.getElementById('select2').value = 0;
+    });
+
+    function getBestGuess(possibleList) {
+      let bestPin = null;
+      let minMaxGroup = Infinity;
+      for (const guess of possibleList) {
+        const groups = {};
+        for (const secret of possibleList) {
+          const ab = calcAB(guess, secret);
+          const key = `${ab.A}-${ab.B}`;
+          groups[key] = (groups[key] || 0) + 1;
+        }
+        const maxGroup = Math.max(...Object.values(groups));
+        if (maxGroup < minMaxGroup) {
+          minMaxGroup = maxGroup;
+          bestPin = guess;
+        }
+      }
+      return bestPin ? { pin: bestPin.join(''), minMaxGroup } : null;
+    }
+
+    // 建議猜測按鈕
+    document.getElementById('suggest-btn').onclick = () => {
+      let result;
+      result = getBestGuess(possibleList);
+      
+      if (result && result.pin) {
+        result.pin.split('').forEach((num, idx) => {
+          if (inputs[idx]) inputs[idx].value = num;
+        });
+        inputs[0].focus();
+        alert(`建議猜測PIN：${result.pin}\n最壞情況剩下組合數：${result.minMaxGroup}`);
+      } else {
+        alert('無可建議的猜測');
+      }
+    };
+  </script>
+</body>
+</html>
