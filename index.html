@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>李婕猜數字的作弊工具</title>
+  <title>李婕的猜數字作弊工具</title>
   <style>
     body, input, button, .pin-container, .extra-container, .extra-label, .pin-input, .extra-number, .confirm-btn, .suggest-btn, .arrow-btn, #possible-list, h3 {
       font-family: 'Microsoft JhengHei', '微軟正黑體', Arial, sans-serif;
@@ -35,82 +35,101 @@
       align-items: center;
     }
     .arrow-btn {
-      width: 32px;
-      height: 24px;
-      background: #e3f2fd;
-      color: #1976d2;
+      width: 40px;
+      height: 32px;
+      background: none;
+      color: #92b3d3;
       border: none;
-      border-radius: 6px;
-      font-size: 1.2rem;
+      border-radius: 0;
+      font-size: 2rem;
       cursor: pointer;
-      margin: 2px 0;
-      transition: background 0.2s;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
     }
     .arrow-btn:active {
-      background: #bbdefb;
+      color: #005fa3;
+      background: none;
     }
     .extra-number {
-      width: 32px;
+      width: 48px;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 2rem;
       margin: 2px 0;
       border: none;
-      border-radius: 6px;
-      background: #f5f5f5;
+      border-radius: 0;
+      background: none;
       color: #1976d2;
-      box-shadow: 0 0 0 1px #bbdefb;
+      box-shadow: none;
       outline: none;
+      font-weight: bold;
     }
     .extra-label {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: bold;
       color: #0078d7;
       width: 30px;
       text-align: center;
     }
+    .extra-container > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
     .confirm-btn {
       height: 40px;
-      font-size: 1.2rem;
-      padding: 0 18px;
+      font-size: 1.3rem;
+      padding: 0 24px;
       margin-left: 16px;
       background-color: #0078d7;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+      letter-spacing: 2px;
     }
-    .confirm-btn:hover {
+    .confirm-btn:hover, .confirm-btn:focus {
       background-color: #005fa3;
+      box-shadow: 0 4px 16px rgba(0,120,215,0.12);
     }
     .suggest-btn {
       height: 40px;
-      font-size: 1.2rem;
-      padding: 0 18px;
+      font-size: 1.3rem;
+      padding: 0 24px;
       margin-left: 8px;
-      background-color: #28a745; /* 綠色，與藍色接近但不同 */
-      color: #fff;
+      background-color: #8ff4ad;
+      color: #0b7e37;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+      letter-spacing: 2px;
     }
-    .suggest-btn:hover {
-      background-color: #218838;
+    .suggest-btn:hover, .suggest-btn:focus {
+      background-color: #b3fcbf;
+      box-shadow: 0 4px 16px rgba(33,150,243,0.12);
     }
     @media (max-width: 600px) {
       .extra-number {
         width: 48px;
-        font-size: 1rem;
+        font-size: 1.5rem;
       }
       .extra-label {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         width: 24px;
       }
-      .confirm-btn, .suggest-btn {
-        font-size: 1rem;
-        padding: 0 10px;
-        height: 36px;
+      .arrow-btn {
+        width: 36px;
+        height: 28px;
+        font-size: 1.5rem;
       }
     }
   </style>
@@ -335,4 +354,3 @@
   </script>
 </body>
 </html>
-
