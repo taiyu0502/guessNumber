@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>PIN Code 輸入框</title>
+  <title>李婕猜數字的作弊工具</title>
   <style>
     .pin-container {
       display: flex;
@@ -196,7 +196,7 @@
 
     // 新的計算 function
     function newCalculate(pin, selectA, selectB) {
-      //alert(`PIN: ${pin}\nA選單: ${selectA}\nB選單: ${selectB}`);
+      alert(`PIN: ${pin}\nA選單: ${selectA}\nB選單: ${selectB}`);
       // 這裡可以放你的計算邏輯
     }
 
@@ -270,22 +270,28 @@
     });
 
     function getBestGuess(possibleList) {
-      let bestPin = null;
       let minMaxGroup = Infinity;
+      let bestPins = [];
       for (const guess of possibleList) {
         const groups = {};
         for (const secret of possibleList) {
-          const ab = calcAB(guess, secret);
-          const key = `${ab.A}-${ab.B}`;
-          groups[key] = (groups[key] || 0) + 1;
+         const ab = calcAB(guess, secret);
+         const key = `${ab.A}-${ab.B}`;
+         groups[key] = (groups[key] || 0) + 1;
         }
         const maxGroup = Math.max(...Object.values(groups));
         if (maxGroup < minMaxGroup) {
-          minMaxGroup = maxGroup;
-          bestPin = guess;
+         minMaxGroup = maxGroup;
+         bestPins = [guess];
+        } else if (maxGroup === minMaxGroup) {
+          bestPins.push(guess);
         }
-      }
-      return bestPin ? { pin: bestPin.join(''), minMaxGroup } : null;
+      }  
+      if (bestPins.length > 0) {
+       const randIdx = Math.floor(Math.random() * bestPins.length);
+       return { pin: bestPins[randIdx].join(''), minMaxGroup };
+     }
+      return null;
     }
 
     // 建議猜測按鈕
@@ -317,7 +323,7 @@
     // 上下箭頭控制 select2
     document.getElementById('select2-up').onclick = function() {
       let val = Number(document.getElementById('select2').value);
-      if (val < 4) document.getElementById('select2').value = val + 1;
+      if (val < 3) document.getElementById('select2').value = val + 1;
     };
     document.getElementById('select2-down').onclick = function() {
       let val = Number(document.getElementById('select2').value);
@@ -326,5 +332,3 @@
   </script>
 </body>
 </html>
-
-
